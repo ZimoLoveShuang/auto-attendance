@@ -146,7 +146,6 @@ def getDetailTask(params, apis):
 
 # 填充表单
 def fillForm(task, user, apis):
-    user = user['user']
     form = {}
     form['signInstanceWid'] = task['signInstanceWid']
     form['longitude'] = user['lon']
@@ -215,7 +214,6 @@ def DESDecrypt(s, key='XCE927=='):
 
 # 提交签到任务
 def submitForm(user, form, apis):
-    user = user['user']
     # Cpdaily-Extension
     extension = {
         "lon": user['lon'],
