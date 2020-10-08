@@ -22,7 +22,6 @@ sessionToken = ''
 
 
 # 全局
-
 session = requests.session()
 session.cookies = requests.utils.cookiejar_from_dict(Cookies)
 
@@ -283,21 +282,22 @@ def getModAuthCas(data, apis):
     url = 'https://{host}/wec-counselor-sign-apps/stu/mobile/index.html?timestamp='.format(host=apis['host']) + str(
         int(round(time.time() * 1000)))
     res = session.get(url=url, headers=headers, allow_redirects=False)
-    location = res.headers['location']
-    # print(location)
-    headers2 = {
-        'Host': 'www.cpdaily.com',
-        'Connection': 'keep-alive',
-        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-        'User-Agent': 'Mozilla/5.0 (Linux; Android 4.4.4; PCRT00 Build/KTU84P) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/33.0.0.0 Safari/537.36 cpdaily/8.0.8 wisedu/8.0.8',
-        'Accept-Encoding': 'gzip,deflate',
-        'Accept-Language': 'zh-CN,en-US;q=0.8',
-        'Cookie': 'clientType=cpdaily_student; tenantId=' + apis['tenantId'] + '; sessionToken=' + sessionToken,
-    }
-    res = session.get(url=location, headers=headers2, allow_redirects=False)
-    location = res.headers['location']
-    # print(location)
-    session.get(url=location, headers=headers)
+    if 'location' in res.headers:
+        location = res.headers['location']
+        # print(location)
+        headers2 = {
+            'Host': 'www.cpdaily.com',
+            'Connection': 'keep-alive',
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+            'User-Agent': 'Mozilla/5.0 (Linux; Android 4.4.4; PCRT00 Build/KTU84P) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/33.0.0.0 Safari/537.36 cpdaily/8.0.8 wisedu/8.0.8',
+            'Accept-Encoding': 'gzip,deflate',
+            'Accept-Language': 'zh-CN,en-US;q=0.8',
+            'Cookie': 'clientType=cpdaily_student; tenantId=' + apis['tenantId'] + '; sessionToken=' + sessionToken,
+        }
+        res = session.get(url=location, headers=headers2, allow_redirects=False)
+        location = res.headers['location']
+        # print(location)
+        session.get(url=location, headers=headers)
     cookies = requests.utils.dict_from_cookiejar(session.cookies)
     if 'MOD_AUTH_CAS' not in cookies:
         log('获取MOD_AUTH_CAS失败。。。')
